@@ -1,16 +1,11 @@
 <template>
-  <Questionnaire/>
+  <Questionnaire v-show="loading"/>
 </template>
 
-<script>
+<script setup>
 import Questionnaire from './components/Questionnaire.vue';
 
-export default {
-  name: 'App',
-  components: {
-    Questionnaire
-  },
-}
+
 </script>
 
 <style>

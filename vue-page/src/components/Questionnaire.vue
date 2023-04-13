@@ -7,7 +7,7 @@
         <n-space vertical style="width: 300px;" :size="[0, 100]">
             <!-- 调色区 -->
             <h3>【肤色调节】</h3>
-            <ImageHSBInput v-for="([img, mask], i) in  zip(imgs, masks)" :key="img" :img="img" :mask="mask"
+            <ImageHSBInput v-for="([img, mask], i) in zip(imgs, masks)" :key="img" :img="img" :mask="mask"
                 @change="(val) => onHSBChange(i, val)" />
 
             <!-- 个人信息区 -->
@@ -30,8 +30,8 @@
 
                 <div style="height: 25px;"></div>
                 <n-button type="primary" style="display: inline; text-align: center;" @click="submit">提交问卷</n-button>
+                <h3 v-if="submitted" style="color: sienna;">提交成功！您可以关闭页面了</h3>
                 <div style="height: 50px;"></div>
-
                 <!-- {{ computed(() => JSON.stringify(colors)) }} -->
             </n-space>
         </n-space>
@@ -44,16 +44,16 @@ import { ref } from 'vue';
 import ImageHSBInput from './ImageHSBInput.vue';
 
 let imgs = [
-    "https://s1.ax1x.com/2023/04/13/ppvZEYF.png",
-    "https://s1.ax1x.com/2023/04/13/ppverHx.png",
-    "https://s1.ax1x.com/2023/04/13/ppveQjs.png",
-    "https://s1.ax1x.com/2023/04/13/ppxw8vd.png",
+    "https://cystudio.tech/static/faces/p1.png",
+    "https://cystudio.tech/static/faces/p2.png",
+    "https://cystudio.tech/static/faces/p3.png",
+    "https://cystudio.tech/static/faces/p4.png",
 ];
 let masks = [
-    "https://s1.ax1x.com/2023/04/13/ppvZAFU.png",
-    "https://s1.ax1x.com/2023/04/13/ppveyE6.png",
-    "https://s1.ax1x.com/2023/04/13/ppveK3Q.png",
-    "https://s1.ax1x.com/2023/04/13/ppxw3gH.png",
+    "https://cystudio.tech/static/faces/p1m.png",
+    "https://cystudio.tech/static/faces/p2m.png",
+    "https://cystudio.tech/static/faces/p3m.png",
+    "https://cystudio.tech/static/faces/p4m.png",
 ];
 
 
@@ -61,6 +61,7 @@ let colors = new Array(imgs.length).fill({ H: 0, S: 0, B: 0 })
 let name = ref('')
 let gender = ref('男')
 let age = ref(18)
+let submitted = ref(false)
 
 function onHSBChange(i, hsb) {
     colors[i] = hsb
@@ -85,9 +86,10 @@ function submit() {
             'Content-Type': 'application/json'
         }
     }).then((response) => {
+        submitted.value = true;
         if (response.ok) alert('提交成功，感谢您的配合！');
         else alert('提交出错！');
-    })
+    }).catch(()=>alert('提交出错！'))
 }
 
 </script>

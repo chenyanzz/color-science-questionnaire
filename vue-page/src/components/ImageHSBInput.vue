@@ -1,10 +1,11 @@
 <template>
   <n-space vertical id="container">
 
-    <div style="display: flex;">
-      <img width="300" :src="mask"
-        :style="{ filter: `brightness(${B}%) saturate(${S}%) hue-rotate(${H}deg) `, marginRight: '-100%', zIndex: 1 }">
-      <img width="300" :src="img" style="z-index: 0;" />
+    <div style="display: flex; align-items: center; justify-items: center;">
+      <n-spin v-show="!loaded" size="large" />
+      <img width="300" v-show="loaded" :src="mask"
+        :style="{ filter: `brightness(${B}%) saturate(${S}%) hue-rotate(${H}deg) `, marginRight: '-100%', zIndex: 1 }" @load="onLoadImg">
+      <img width="300" v-show="loaded" :src="img" style="z-index: 0;" @load="onLoadImg"/>
     </div>
     <slider-area>
       <n-tag> 色调 </n-tag>
@@ -50,7 +51,6 @@ let B = computed(() => 100 + (b.value - 50) * 0.5) // %
 
 resetHSB()
 
-
 function resetHSB() {
   h.value = 50
   s.value = 50
@@ -62,6 +62,17 @@ function onChange() {
   // console.log('hsb-change-value')
   emit('change', { "H": H.value, "S": S.value, "B": B.value })
 }
+
+let cnt_load_img = ref(0)
+let loaded = computed(()=>cnt_load_img.value==2)
+function onLoadImg(){
+  cnt_load_img.value++
+}
+
+
+let loading = ref(true)
+
+loading.value = false;
 
 </script>
 
