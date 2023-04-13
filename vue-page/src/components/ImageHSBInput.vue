@@ -1,0 +1,79 @@
+<template>
+  <n-space vertical id="container">
+
+    <div style="display: flex;">
+      <img width="300" :src="mask"
+        :style="{ filter: `brightness(${B}%) saturate(${S}%) hue-rotate(${H}deg) `, marginRight: '-100%', zIndex: 1 }">
+      <img width="300" :src="img" style="z-index: 0;" />
+    </div>
+    <slider-area>
+      <n-tag> 色调 </n-tag>
+      <div style="display: block; width: 20px;" />
+      <n-slider v-model:value="h" :step="1" :format-tooltip="() => `${H.toFixed(2)}deg`"
+        :on-update:value="(val) => { h = val; onChange() }" />
+    </slider-area>
+    <slider-area>
+      <n-tag> 饱和 </n-tag>
+      <div style="display: block; width: 20px;" />
+      <n-slider v-model:value="s" :step="1" :format-tooltip="() => `${S.toFixed(2)}%`"
+        :on-update:value="(val) => { s = val; onChange() }" />
+    </slider-area>
+    <slider-area>
+      <n-tag> 亮度 </n-tag>
+      <div style="display: block; width: 20px;" />
+      <n-slider v-model:value="b" :step="1" :format-tooltip="() => `${B.toFixed(2)}%`"
+        :on-update:value="(val) => { b = val; onChange() }" />
+    </slider-area>
+    <n-button @click="resetHSB">重置颜色</n-button>
+  </n-space>
+</template>
+
+<script setup>
+
+import { computed, defineEmits, defineProps, ref } from 'vue';
+
+defineProps({
+  img: String,
+  mask: String
+});
+const emit = defineEmits(['change']);
+
+// slider  value [0,100]
+let h = ref(0)
+let s = ref(0)
+let b = ref(0)
+
+// filter parameter
+let H = computed(() => (h.value - 50) * 0.5) // deg
+let S = computed(() => 100 + (s.value - 50)) // %
+let B = computed(() => 100 + (b.value - 50) * 0.5) // %
+
+resetHSB()
+
+
+function resetHSB() {
+  h.value = 50
+  s.value = 50
+  b.value = 50
+  onChange()
+}
+
+function onChange() {
+  // console.log('hsb-change-value')
+  emit('change', { "H": H.value, "S": S.value, "B": B.value })
+}
+
+</script>
+
+<style>
+#container {
+  width: 300px;
+}
+
+slider-area {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+</style>
