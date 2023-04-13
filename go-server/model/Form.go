@@ -3,11 +3,12 @@ package model
 import "time"
 
 type HSB struct {
-	H, S, V float32
+	H, S, B float32
 }
 
 type Form struct {
-	Zjuid     string
+	Gender    string
+	Age       int
 	Name      string
 	Colors    []HSB
 	CreatedAt time.Time
