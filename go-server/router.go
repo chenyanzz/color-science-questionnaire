@@ -8,6 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func UploadForm(c *gin.Context) {
@@ -18,7 +20,7 @@ func UploadForm(c *gin.Context) {
 		return
 	}
 	form.CreatedAt = time.Now()
-	if _, err := database.DB.Collection("forms").InsertOne(context.Background(), form); err != nil {
+	if _, err := database.DB.Collection("forms").ReplaceOne(context.Background(), bson.D{{"name", form.Name}}, form, options.Replace().SetUpsert(true)); err != nil {
 		logrus.Error(err)
 		c.String(500, "fail to insert data")
 		return
